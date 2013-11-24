@@ -53,4 +53,9 @@ class WordManager extends Manager {
         $sql = "select * from word w where w.word = ?";
         return $this->executeQuery($sql, array($word));
     }
+
+    public function get_all_word() {
+        $sql = "select * from word";
+        return $this->executeQuery($sql, array(), false);
+    }
 }
