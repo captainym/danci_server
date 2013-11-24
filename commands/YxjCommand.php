@@ -17,6 +17,15 @@ class YxjCommand extends Command {
             'imei' =>'123123123123', 'sid'=> 'sid123123', 'passwd'=>'123123'
         );
 
+        $rs = $this->mCrypt->encrypt(json_encode($data));
+        echo $rs;
+
+        $rs = $this->mCrypt->decrypt($rs);
+        echo $rs;
+        var_dump(json_decode($rs, true));
+        exit;
+
+
         $rs = $this->user->add_user($data);
         var_dump($rs);
         $rs = $this->user->auth(array('username'=>'yuanxijie', 'passwd'=>'123123'));

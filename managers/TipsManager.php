@@ -25,7 +25,7 @@ class TipsManager extends Manager {
         $items =  $this->executeQuery($sql, array($word), false);
 
         $base_path = G::$conf['bdc']['CLOUD_BASE_PATH'];
-        $base_url = $this->get_download_server_url();
+//        $base_url = $this->get_download_server_url();
         $rs = array();
         if(is_array($items)) {
             foreach($items as $item) {
@@ -33,7 +33,8 @@ class TipsManager extends Manager {
                 $img_key = $item['img_key'];
 
                 $img_file_path = $base_path . "/" . $word . "/images/" . $img_key;
-                $img_url = $base_url . "?file_type=jpeg&file_path=".urlencode($img_file_path);
+//                $img_url = $base_url . "?file_type=jpeg&file_path=".urlencode($img_file_path);
+                $img_url = $this->gen_download_url('jpeg', $img_file_path);
                 $rs []= array('img_key'=>$img_key, 'img_url'=>$img_url);
             }
         }
@@ -57,7 +58,34 @@ class TipsManager extends Manager {
         return $rs;
     }
 
+    /**
+     * 获取可用的bae下载server
+     * @return string
+     */
     public function get_download_server_url() {
-        return "http://acodingfarmer.com/bdc/cloud/file";
+        return "http://detail.duapp.com";
+    }
+
+    /**
+     * 获取一个最空的bcs
+     */
+    public function get_download_bcs() {
+        $bucket = G::$conf['bdc']['BUCKET'];
+        $baidu_ak = G::$conf['bdc']['BAIDU_AK'];
+        $baidu_sk = G::$conf['bdc']['BAIDU_SK'];
+        $params = array('vender'=>'baidu','bucket'=>$bucket,
+            'ak'=>$baidu_ak, 'sk'=>$baidu_sk);
+
+        return $params;
+    }
+    public function gen_download_url($file_type, $file_path) {
+        $base_url = $this->get_download_server_url();
+        $bcs_token_params = $this->get_download_bcs();
+        $bcs_token_params['file_path'] = $file_path;
+        $bcs_token_params['file_type'] = $file_type;
+
+        $token = $this->mCrypt->encrypt(json_encode($bcs_token_params));
+
+        return $base_url . "?token=" . urlencode($token);
     }
 }
