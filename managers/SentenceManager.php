@@ -30,7 +30,7 @@ class SentenceManager extends Manager {
                 $rs []= $item;
             }
         }
-        $rs = $this->arrayResult(1, 'ok', $rs);
+        $rs = $this->arrayResult(0, 'ok', $rs);
         return $rs;
     }
 
