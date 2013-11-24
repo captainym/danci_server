@@ -42,17 +42,15 @@ class QueryController extends Controller {
      * 获取助记信息，包括img和txt, 通过参数区分,默认文字助记
      */
     public function actionTips() {
-        $word = $_GET['word'];
-        $type = $_GET['type'];
+        $word = trim($_GET['word']);
+        $type = trim($_GET['type']);
         $start = isset($_GET['start']) ? $_GET['start'] : 0;
         $count = isset($_GET['count']) ? $_GET['count'] : 50;
 
-        $word_info = $this->word->get_pure_word_info($word);
-        $word_id = $word_info['id'];
         if($type == 'img') {
-            $rs = $this->tips->get_img_tips($word_id, $start, $count);
+            $rs = $this->tips->get_img_tips($word, $start, $count);
         } else {
-            $rs = $this->tips->get_txt_tips($word_id, $start, $count);
+            $rs = $this->tips->get_txt_tips($word, $start, $count);
         }
 
 
