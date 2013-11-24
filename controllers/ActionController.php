@@ -20,9 +20,8 @@ class ActionController extends Controller {
     }
 
     public function actionAuth() {
-        $username = $_POST['username'];
-        $password = $_POST['passwd'];
-
+        $rs = $this->user->auth($_POST);
+        echo json_encode($rs);
     }
 
     public function actionOp() {
