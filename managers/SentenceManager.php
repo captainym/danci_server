@@ -35,6 +35,6 @@ class SentenceManager extends Manager {
     }
 
     public function get_download_server_url() {
-        return "http://imgdu.com/bdc/cloud/file";
+        return "http://acodingfarmer.com/bdc/cloud/file";
     }
 }
