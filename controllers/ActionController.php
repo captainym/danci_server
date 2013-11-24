@@ -14,4 +14,16 @@ class ActionController extends Controller {
 
     }
 
+    public function actionRegister() {
+        $rs = $this->user->add_user($_POST);
+        echo json_encode($rs);
+    }
+
+    public function actionAuth() {
+
+    }
+
+    public function actionOp() {
+
+    }
 }

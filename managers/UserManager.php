@@ -9,8 +9,7 @@
 class UserManager extends Manager {
 
     public function add_user($data) {
-
-        $user_name = $data['user_name'];
+        $user_name = $data['username'];
         $email = $data['email'];
         $passwd = $data['passwd'];
         $imei = $data['imei'];
@@ -20,9 +19,19 @@ class UserManager extends Manager {
         if($rs['status'] != 0) {
             return $rs;
         }
+        $user = $this->get_user_by_name($user_name);
+        if($user) {
+            return $this->arrayResult(1, '用户名' . $user_name . '已注册');
+        }
+
+        $user = $this->get_user_by_email($email);
+        if($user) {
+            return $this->arrayResult(1, '邮箱' . $email . '已注册');
+        }
+
 
         $user = new User();
-        $user->user_name = $user_name;
+        $user->username = $user_name;
         $user->email = $email;
         $user->passwd = $passwd;
         $user->imei = $imei;
@@ -47,6 +56,11 @@ class UserManager extends Manager {
     public function get_user_by_name($user_name) {
         $sql = "select * from `user` where username= ?";
         return $this->executeQuery($sql, array($user_name));
+    }
+
+    public function get_user_by_email($email) {
+        $sql = "select * from `user` where email= ?";
+        return $this->executeQuery($sql, array($email));
     }
 
     public function add_payment($user_id, $data) {
