@@ -38,6 +38,7 @@ class TipsManager extends Manager {
             }
         }
 
+        $rs = $this->arrayResult(1, 'ok', $rs);
         return $rs;
     }
 
@@ -45,7 +46,12 @@ class TipsManager extends Manager {
         $start = intval($start);
         $limit = intval($limit);
         $sql = "select tip from word_tips_txt where word = ? order by rank limit $start, $limit";
-        return $this->executeQuery($sql, array($word), false);
+        $rs = $this->executeQuery($sql, array($word), false);
+        if(!$rs) {
+            $rs = array();
+        }
+
+        return $this->arrayResult(1, 'ok', $rs);
     }
 
     public function get_download_server_url() {

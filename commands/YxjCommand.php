@@ -19,5 +19,7 @@ class YxjCommand extends Command {
 
         $rs = $this->user->add_user($data);
         var_dump($rs);
+        $rs = $this->user->auth(array('username'=>'yuanxijie', 'passwd'=>'123123'));
+        var_dump($rs);
     }
 }

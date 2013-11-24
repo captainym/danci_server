@@ -48,6 +48,20 @@ class UserManager extends Manager {
         return $this->arrayResult(0, 'ok', $user->id);
     }
 
+    public function auth($data) {
+        $username = $data['username'];
+        $passwd = $data['passwd'];
+        $user = $this->get_user_by_name($username);
+        if(!$user) {
+            return $this->arrayResult(1, '用户名:'. $username . "不存在");
+        }
+
+        if($user['passwd'] == $passwd) {
+            return $this->arrayResult(0, '登陆成功');
+        }
+
+        return $this->arrayResult(1, '用户名和密码不匹配');
+    }
     public function get_user_by_id($user_id) {
         $sql = "select * from `user` where id = ?";
         return $this->executeQuery($sql, array($user_id));
@@ -62,6 +76,7 @@ class UserManager extends Manager {
         $sql = "select * from `user` where email= ?";
         return $this->executeQuery($sql, array($email));
     }
+
 
     public function add_payment($user_id, $data) {
         $pay_amount = $data['pay_amount'];
