@@ -39,6 +39,7 @@ class TipsManager extends Manager {
         }
 
         $rs = $this->arrayResult(0, 'ok', $rs);
+        $rs['word'] = $word;
         return $rs;
     }
 
@@ -51,7 +52,9 @@ class TipsManager extends Manager {
             $rs = array();
         }
 
-        return $this->arrayResult(0, 'ok', $rs);
+        $rs =  $this->arrayResult(0, 'ok', $rs);
+        $rs['word'] = $word;
+        return $rs;
     }
 
     public function get_download_server_url() {

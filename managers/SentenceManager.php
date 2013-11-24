@@ -31,6 +31,7 @@ class SentenceManager extends Manager {
             }
         }
         $rs = $this->arrayResult(0, 'ok', $rs);
+        $rs['word'] = $word;
         return $rs;
     }
 
