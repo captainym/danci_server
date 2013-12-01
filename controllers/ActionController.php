@@ -19,7 +19,10 @@ class ActionController extends Controller {
     }
 
     public function actionAuth() {
+        $headers = getallheaders();
         $this->logger->info('start to auto user', $_POST);
+        $this->logger->info('get raw body', http_get_request_body());
+        $this->logger->info("get all headers", $headers);
         $rs = $this->user->auth($_POST);
         $this->logger->info('end to auth user', $rs);
         echo json_encode($rs);
