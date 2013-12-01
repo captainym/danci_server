@@ -63,7 +63,7 @@ class UserManager extends Manager {
             return $rs;
         }
 
-        $data = array('studyNo'=>$user->id, 'mid'=>$user_name,
+        $data = array('status'=>0, 'msg'=>'ok', 'studyNo'=>$user->id, 'mid'=>$user_name,
             'maxWordNum'=>$user->word_limit, 'comsumeWordNum'=>0, 'regTime'=>$create_time);
         return $this->arrayResult(0, 'ok', $data);
     }
