@@ -9,11 +9,11 @@
 class UserManager extends Manager {
 
     public function add_user($data) {
-        $user_name = $data['username'];
+        $user_name = $data['mid'];
         $email = $data['email'];
-        $passwd = $data['passwd'];
+        $passwd = $data['pwd'];
         $imei = $data['imei'];
-        $sid = $data['sid'];
+        $tuijian = $data['tuijian'];
 
         $rs = $this->check_user_name($user_name);
         if($rs['status'] != 0) {
@@ -30,6 +30,8 @@ class UserManager extends Manager {
         }
 
 
+        $create_time = time();
+
         $user = new User();
         $user->username = $user_name;
         $user->email = $email;
@@ -37,30 +39,40 @@ class UserManager extends Manager {
         $user->imei = $imei;
         $user->word_used = 0;
         $user->word_limit = G::$conf['DEFAULT_WORD_LIMIT'];
-
+        $user->create_time = $create_time;
+        $user->tuijian = $tuijian;
         try {
             $user->save();
         } catch (Exception $e) {
             $this->logger->error('error to save user:[' . $e->getMessage() . "]", $data);
-            return $this->arrayResult(1, '内部错误，无法注册用户，请联系管理员');
+            $rs =  $this->arrayResult(1, '内部错误，无法注册用户，请联系管理员');
+            $rs['data'] = array('msg'=>$rs['msg'], 'status'=>$rs['status']);
+            return $rs;
         }
 
-        return $this->arrayResult(0, 'ok', $user->id);
+        $data = array('studyNo'=>$user->id, 'mid'=>$user_name,
+            'maxWordNum'=>$user->word_limit, 'comsumeWordNum'=>0, 'regTime'=>$create_time);
+        return $this->arrayResult(0, 'ok', $data);
     }
 
     public function auth($data) {
-        $username = $data['username'];
-        $passwd = $data['passwd'];
+        $username = $data['mid'];
+        $password = $data['pwd'];
         $user = $this->get_user_by_name($username);
         if(!$user) {
             return $this->arrayResult(1, '用户名:'. $username . "不存在");
         }
 
-        if($user['passwd'] == $passwd) {
-            return $this->arrayResult(0, '登陆成功');
+        if($user['passwd'] == $password) {
+            $data = array('studyNo'=>$user['id'], 'mid'=>$user['username'],
+                'maxWordNum'=>$user['word_limit'], 'comsumeWordNum'=>$user['word_used'], 'regTime'=>$user['create_time']);
+            return $this->arrayResult(0, '登陆成功', $data);
         }
 
-        return $this->arrayResult(1, '用户名和密码不匹配');
+        $rs = $this->arrayResult(1, '用户名和密码不匹配');
+        $rs['data'] = array('msg'=>$rs['msg'], 'status'=>$rs['status']);
+
+        return $rs;
     }
     public function get_user_by_id($user_id) {
         $sql = "select * from `user` where id = ?";

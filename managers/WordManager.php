@@ -11,6 +11,7 @@ class WordManager extends Manager {
      * 获取某个用户的单词信息
      * @param $user_id
      * @param $word
+     * @return array
      */
     public function get_word_info($user_id, $word) {
         $user_info = $this->user->get_user_by_id($user_id);

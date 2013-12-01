@@ -12,10 +12,25 @@ class YxjCommand extends Command {
         error_reporting(E_ALL & ~E_NOTICE);
         ini_set('display_errors', true);
 
+
+        foreach(array(1, 2, 3) as $item) {
+            $rs = $this->account->get_bae_account_for_word('remind');
+            print_r($rs);
+        }
+        foreach(array(1, 2, 3) as $item) {
+            $rs = $this->account->get_bae_account_for_word('herd');
+            print_r($rs);
+        }
+
+
+        return;
+
         $data = array(
             'username'=>'yuanxijie1', 'email'=>'yuanxijie@gmail.com',
             'imei' =>'123123123123', 'sid'=> 'sid123123', 'passwd'=>'123123'
         );
+
+
 
         $rs = $this->mCrypt->encrypt(json_encode($data));
         echo $rs;
