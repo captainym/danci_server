@@ -8,7 +8,6 @@
  */ 
 class ActionController extends Controller {
     public function actionRegister() {
-        $this->logger->info('start to register user', $_GET);
         $this->logger->info('start to register user', $_POST);
         $rs = $this->user->add_user($_POST);
         $this->logger->info('end to register user', $rs);
@@ -17,7 +16,9 @@ class ActionController extends Controller {
     }
 
     public function actionAuth() {
+        $this->logger->info('start to auto user', $_POST);
         $rs = $this->user->auth($_POST);
+        $this->logger->info('end to auth user', $rs);
         echo json_encode($rs);
     }
 
