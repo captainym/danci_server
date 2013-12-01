@@ -79,7 +79,7 @@ class UserManager extends Manager {
         }
 
         if($user['passwd'] == $password) {
-            $data = array('studyNo'=>$user['id'], 'mid'=>$user['username'],
+            $data = array('status'=>0, 'msg'=>'ok', 'studyNo'=>$user['id'], 'mid'=>$user['username'],
                 'maxWordNum'=>$user['word_limit'], 'comsumeWordNum'=>$user['word_used'], 'regTime'=>$user['create_time']);
             return $this->arrayResult(0, '登陆成功', $data);
         }
