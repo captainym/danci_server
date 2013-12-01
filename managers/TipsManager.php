@@ -47,7 +47,7 @@ class TipsManager extends Manager {
     public function get_txt_tips($word, $start=0, $limit=50) {
         $start = intval($start);
         $limit = intval($limit);
-        $sql = "select tip from word_tips_txt where word = ? order by rank limit $start, $limit";
+        $sql = "select id, tip from word_tips_txt where word = ? order by rank limit $start, $limit";
         $rs = $this->executeQuery($sql, array($word), false);
         if(!$rs) {
             $rs = array();

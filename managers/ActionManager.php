@@ -10,12 +10,13 @@ class ActionManager extends Manager {
     public function add_op($data) {
         $op_type = $data['otype'];
         $op_value = $data['ovalue'];
-        $op_time = $data['opt_time'];
-        $op_user = $data['username'];
         $word = $data['word'];
+        $op_time = time();
+
+
+        $option = new UserOperation();
 
         return $this->arrayResult(0, 'ok');
     }
-
 
 }
