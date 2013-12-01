@@ -8,6 +8,7 @@
  */ 
 class ActionController extends Controller {
     public function actionRegister() {
+        $this->logger->info('start to register user', $_GET);
         $this->logger->info('start to register user', $_POST);
         $rs = $this->user->add_user($_POST);
         $this->logger->info('end to register user', $rs);
