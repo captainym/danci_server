@@ -17,16 +17,23 @@ class UserManager extends Manager {
 
         $rs = $this->check_user_name($user_name);
         if($rs['status'] != 0) {
+            $rs['data'] = array('msg'=>$rs['msg'], 'status'=>$rs['status']);
             return $rs;
         }
         $user = $this->get_user_by_name($user_name);
         if($user) {
-            return $this->arrayResult(1, '用户名' . $user_name . '已注册');
+            $rs = $this->arrayResult(1, '用户名' . $user_name . '已注册');
+            $rs['data'] = array('msg'=>$rs['msg'], 'status'=>$rs['status']);
+
+            return $rs;
         }
 
         $user = $this->get_user_by_email($email);
         if($user) {
-            return $this->arrayResult(1, '邮箱' . $email . '已注册');
+            $rs = $this->arrayResult(1, '邮箱' . $email . '已注册');
+            $rs['data'] = array('msg'=>$rs['msg'], 'status'=>$rs['status']);
+
+            return $rs;
         }
 
 

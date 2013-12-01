@@ -94,5 +94,8 @@ class TipsManager extends Manager {
         return $this->executeUpdate($sql, array($word, $img_key));
     }
 
-    public function
+    public function adpot_txt($word, $tip_id) {
+        $sql = 'update word_tips_txt set adopt_times = adopt_times + 1  where id=?';
+        return $this->executeUpdate($sql, array($tip_id));
+    }
 }
