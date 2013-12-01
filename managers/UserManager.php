@@ -9,15 +9,21 @@
 class UserManager extends Manager {
 
     public function add_user($data) {
-        $user_name = $data['mid'];
+        $user_name = trim($data['mid']);
         $email = $data['email'];
         $passwd = $data['pwd'];
         $imei = $data['imei'];
         $tuijian = $data['tuijian'];
 
-        $rs = $this->check_user_name($user_name);
-        if($rs['status'] != 0) {
+//        $rs = $this->check_user_name($user_name);
+//        if($rs['status'] != 0) {
+//            $rs['data'] = array('msg'=>$rs['msg'], 'status'=>$rs['status']);
+//            return $rs;
+//        }
+        if(empty($user_name)) {
+            $rs = $this->arrayResult(1, '用户名不能为空');
             $rs['data'] = array('msg'=>$rs['msg'], 'status'=>$rs['status']);
+
             return $rs;
         }
         $user = $this->get_user_by_name($user_name);
