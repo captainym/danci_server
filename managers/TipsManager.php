@@ -88,4 +88,11 @@ class TipsManager extends Manager {
 
         return $base_url . "?token=" . urlencode($token);
     }
+
+    public function adopt_img($word, $img_key) {
+        $sql = 'update word_tips_img set adopt_times = adopt_times + 1 where word = ? and img_key =?';
+        return $this->executeUpdate($sql, array($word, $img_key));
+    }
+
+    public function
 }

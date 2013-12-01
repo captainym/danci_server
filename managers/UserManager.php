@@ -60,7 +60,9 @@ class UserManager extends Manager {
         $password = $data['pwd'];
         $user = $this->get_user_by_name($username);
         if(!$user) {
-            return $this->arrayResult(1, '用户名:'. $username . "不存在");
+            $rs = $this->arrayResult(1, '用户名:'. $username . "不存在");
+            $rs['data'] = array('msg'=>$rs['msg'], 'status'=>$rs['status']);
+            return $rs;
         }
 
         if($user['passwd'] == $password) {
