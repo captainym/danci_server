@@ -11,44 +11,12 @@ class YxjCommand extends Command {
     {
         error_reporting(E_ALL & ~E_NOTICE);
         ini_set('display_errors', true);
-        $word = 'accent';
-        $rs = $this->sentence->get_sentence($word, 0, 10);
-        var_dump($rs);
-
-        $rs = $this->tips->get_img_tips($word, 0, 10);
-        var_dump($rs);
-        exit;
-        foreach(array(1, 2, 3) as $item) {
-            $rs = $this->account->get_bae_account_for_word('remind');
-            print_r($rs);
-        }
-        foreach(array(1, 2, 3) as $item) {
-            $rs = $this->account->get_bae_account_for_word('herd');
-            print_r($rs);
-        }
-
-
-        return;
 
         $data = array(
-            'username'=>'yuanxijie1', 'email'=>'yuanxijie@gmail.com',
-            'imei' =>'123123123123', 'sid'=> 'sid123123', 'passwd'=>'123123'
+            'word'=>'herd', 'studyNo'=>'9999', 'feedback_type'=>'11',
+            'create_time'=>strval(time()) . ".1239191"
         );
-
-
-
-        $rs = $this->mCrypt->encrypt(json_encode($data));
-        echo $rs;
-
-        $rs = $this->mCrypt->decrypt($rs);
-        echo $rs;
-        var_dump(json_decode($rs, true));
-        exit;
-
-
-        $rs = $this->user->add_user($data);
-        var_dump($rs);
-        $rs = $this->user->auth(array('username'=>'yuanxijie', 'passwd'=>'123123'));
+        $rs = $this->action->add_feedback($data);
         var_dump($rs);
     }
 }

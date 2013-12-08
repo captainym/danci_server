@@ -19,4 +19,25 @@ class ActionManager extends Manager {
         return $this->arrayResult(0, 'ok');
     }
 
+    public function add_feedback($data) {
+        $word = $data['word'];
+        $studyNo = $data['studyNo'];
+        $status = $data['feedback_type'];
+        $create_time = intval($data['create_time']);
+
+        $feedback = new WordFeedback();
+        $feedback->user_id = $studyNo;
+        $feedback->word = $word;
+        $feedback->status = $status;
+        $feedback->feedback_time = $create_time;
+
+        try {
+            $feedback->save();
+        } catch (Exception $e) {
+            $this->logger->error('error to save feeback:'. $e->getMessage(), $data);
+            return $this->arrayResult(1, 'error to save feeback:'. $e->getMessage());
+        }
+
+        return $this->arrayResult(0, 'ok', array('id'=>$feedback->id));
+    }
 }
