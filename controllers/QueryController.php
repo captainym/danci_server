@@ -15,7 +15,6 @@ class QueryController extends Controller {
         $user_id = $_GET['user_id'];
         $rs = $this->word->get_word_info($user_id, $word);
 
-        var_dump($rs);
         header("Content-Type:text/html;charset=UTF-8");
         header("Content-Type", "text/json");
 
