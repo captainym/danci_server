@@ -161,14 +161,14 @@ class UserManager extends Manager {
 
         $user = $this->get_user_by_id($studyNo);
         if(intval($user['word_used']) > $word_used) {
-            return $this->arrayResult(1, '数据库的已使用单词数据比客户端的还多',
-                array('word_used'=>$user['word_used'], 'maxWordNum'=>$user['word_limit']));
+            return $this->arrayResult(0, '数据库的已使用单词数据比客户端的还多',
+                array('word_used'=>$user['word_used'], 'maxWordNum'=>$user['word_limit'], 'status'=>0, 'msg'=>'ok'));
         }
 
         $sql = 'update user set word_used = ? where id = ?';
         $this->executeUpdate($sql, array($word_used, $studyNo));
 
         return $this->arrayResult(0, 'ok', array('studyNo'=>$studyNo,
-            'maxWordNum'=>$user['word_limit'], 'status'=>0, 'msg'=>'ok'));
+            'maxWordNum'=>$user['word_limit'], 'word_used'=>$user['word_used'], 'status'=>0, 'msg'=>'ok'));
     }
 }
