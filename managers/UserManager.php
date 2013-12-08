@@ -167,6 +167,7 @@ class UserManager extends Manager {
         $sql = 'update user set word_used = ? where id = ?';
         $this->executeUpdate($sql, array($word_used, $studyNo));
 
-        return $this->arrayResult(0, 'ok', array('studyNo'=>$studyNo, 'maxWordNum'=>$user['word_limit']));
+        return $this->arrayResult(0, 'ok', array('studyNo'=>$studyNo,
+            'maxWordNum'=>$user['word_limit'], 'status'=>0, 'msg'=>'ok'));
     }
 }
