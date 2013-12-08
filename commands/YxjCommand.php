@@ -16,6 +16,11 @@ class YxjCommand extends Command {
             'word'=>'herd', 'studyNo'=>'9999', 'feedback_type'=>'11',
             'create_time'=>strval(time()) . ".1239191"
         );
+
+        $rs = '{"tuijian":"7777","mid":"shiym","imei":"imei","pwd":"123123"}';
+        $rs = json_decode($rs, true);
+        $this->user->add_user($rs);
+        exit;
         $rs = $this->action->add_feedback($data);
         var_dump($rs);
     }
