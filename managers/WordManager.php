@@ -15,7 +15,7 @@ class WordManager extends Manager {
      */
     public function get_word_info($user_id, $word) {
         $user_info = $this->user->get_user_by_id($user_id);
-
+        $word_info = $this->get_pure_word_info($word);
         $txt_tip_id = intval($user_info['txt_tip_id']);
         $img_tip_id = intval($user_info['img_tip_id']);
 
@@ -45,6 +45,7 @@ class WordManager extends Manager {
 
         $sentences = $this->sentence->get_sentence($word);
         $data['sentence'] = $sentences;
+        $data['yinbiao'] = $word_info['yinbiao'];
 
         return $this->arrayResult(0, 'ok', $data);
     }
