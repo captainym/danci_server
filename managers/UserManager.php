@@ -44,15 +44,16 @@ class UserManager extends Manager {
 
 
         $create_time = time();
-        $user_name =  $this->mCrypt->encrypt($user_name);
+        $encrypt_user_name =  $this->mCrypt->encrypt($user_name);
         $passwd = $this->mCrypt->encrypt($passwd);
+        $email = $this->mCrypt->encrypt($email);
         $user = new User();
-        $user->username = $user_name;
+        $user->username = $encrypt_user_name;
         $user->email = $email;
         $user->passwd = $passwd;
         $user->imei = $imei;
         $user->word_used = 0;
-        $user->word_limit = G::$conf['DEFAULT_WORD_LIMIT'];
+        $user->word_limit = G::$conf['bdc']['DEFAULT_WORD_LIMIT'];
         $user->create_time = $create_time;
         $user->tuijian = $tuijian;
         try {
