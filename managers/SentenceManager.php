@@ -17,7 +17,6 @@ class SentenceManager extends Manager {
         $rs = array();
 
         $base_path = G::$conf['bdc']['CLOUD_BASE_PATH'];
-        $base_url = $this->get_download_server_url();
 
         if(is_array($items)) {
             foreach ($items as $item) {
@@ -26,7 +25,7 @@ class SentenceManager extends Manager {
                 $mp3_file_path = $base_path . "/" . $word . "/sentence/" . $voice_key;
 //                $mp3_url = $base_url . "?file_type=mp3&file_path=".urlencode($mp3_file_path);
                 unset($item['voice_key']);
-                $item['voice'] = $this->gen_download_url('mp3', $mp3_file_path);
+                $item['voice'] = $this->gen_download_url($word, 'mp3', $mp3_file_path);
                 $rs []= $item;
             }
         }
@@ -39,30 +38,39 @@ class SentenceManager extends Manager {
      * 获取可用的bae下载server
      * @return string
      */
-    public function get_download_server_url() {
-        return "http://detail.duapp.com";
+    public function get_download_server_info($word) {
+
+        $rs = $this->account->get_bae_account_for_word($word);
+        if($rs['status'] != 0) {
+            $this->logger->error('error to get account info for word:' . $word, $rs);
+            return false;
+        }
+
+        $account = $rs['data']['account'];
+        $bae = $rs['bae']['bae'];
+
+        return $rs;
     }
 
-    /**
-     * 获取一个最空的bcs
-     */
-    public function get_download_bcs() {
-        $bucket = G::$conf['bdc']['BUCKET'];
-        $baidu_ak = G::$conf['bdc']['BAIDU_AK'];
-        $baidu_sk = G::$conf['bdc']['BAIDU_SK'];
-        $params = array('vender'=>'baidu','bucket'=>$bucket,
-            'ak'=>$baidu_ak, 'sk'=>$baidu_sk);
+    public function gen_download_url($word, $file_type, $file_path) {
+        $rs = $this->account->get_bae_account_for_word($word);
+        if($rs['status'] != 0) {
+            $this->logger->error('error to get account info for word:' . $word, $rs);
+            return false;
+        }
 
-        return $params;
-    }
-    public function gen_download_url($file_type, $file_path) {
-        $base_url = $this->get_download_server_url();
-        $bcs_token_params = $this->get_download_bcs();
+        $account = $rs['data']['account'];
+        $bae = $rs['data']['bae'];
+
+        $bcs_token_params = array(
+            'vender'=>'baidu','bucket'=>$account['bucket'],
+                'ak'=>$account['ak'], 'sk'=>$account['sk']
+        );
         $bcs_token_params['file_path'] = $file_path;
         $bcs_token_params['file_type'] = $file_type;
 
         $token = $this->mCrypt->encrypt(json_encode($bcs_token_params));
 
-        return $base_url . "?token=" . urlencode($token);
+        return $bae['domain_name'] . "?token=" . urlencode($token);
     }
 }
