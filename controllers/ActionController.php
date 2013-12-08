@@ -77,4 +77,11 @@ class ActionController extends Controller {
         $this->logger->info('operation response:', $rs);
         echo json_encode($rs);
     }
+
+    public function actionSyncUser() {
+        $this->logger->info('received sync user', $_POST);
+        $rs = $this->user->sync_user_info($_POST);
+        $this->logger->info('end sync user', $rs);
+        echo json_encode($rs);
+    }
 }
