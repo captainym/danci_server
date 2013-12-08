@@ -64,11 +64,13 @@ class TipsManager extends Manager {
 
 
     public function adopt_img($word, $img_key) {
-        $sql = 'update word_tips_img set adopt_times = adopt_times + 1 where word = ? and img_key =?';
+        $default_inc = intval(G::$conf['bdc']['ADOPT_RANK_INC']);
+
+        $sql = 'update word_tips_img set adopt_times = adopt_times + 1, rank = rank + ' . $default_inc . ' where word = ? and img_key =?';
         return $this->executeUpdate($sql, array($word, $img_key));
     }
 
-    public function adpot_txt($word, $tip_id) {
+    public function adopt_txt($word, $tip_id) {
         $sql = 'update word_tips_txt set adopt_times = adopt_times + 1  where id=?';
         return $this->executeUpdate($sql, array($tip_id));
     }
@@ -115,5 +117,50 @@ class TipsManager extends Manager {
         $token = $this->mCrypt->encrypt(json_encode($bcs_token_params));
 
         return $base_url . "?token=" . urlencode($token);
+    }
+
+    public function add_txt_tip($data) {
+        $word = $data['word'];
+        $studyNo = $data['studyNo'];
+        $tip_txt = $data['tip_txt'];
+        $create_time = intval($data['create_time']);
+
+        if($this->exists_txt_tip($tip_txt)) {
+            return $this->arrayResult(1, 'tip:[' . $tip_txt . ']已存在，不能添加重复的助记');
+        }
+
+
+        $tip = new WordTipsTxt();
+        $tip->tip = $tip_txt;
+        $tip->create_time = $create_time;
+        $tip->adopt_times = 1;
+        $tip->opt_time = $create_time;
+        $tip->rank = 0;
+        $tip->word = $word;
+        $tip->user_name = $studyNo;
+        $tip->tip_md5 = md5($tip_txt);
+
+        try {
+            $tip->save();
+        } catch (Exception $e) {
+            $this->logger->info('error to save tip:'. $e->getMessage(), $data);
+            return $this->arrayResult(1, 'error to save tip:'. $e->getMessage());
+        }
+
+        return $this->arrayResult(0, 'ok', array('id'=>$tip->id));
+    }
+
+    public function exists_txt_tip($txt) {
+        if(empty($txt)) {
+            return true;
+        }
+        $tip_md5 = md5($txt);
+        $sql = 'select 1 from word_tips_txt where tip_md5 = ? and tip = ?';
+        $rs = $this->executeQuery($sql, array($tip_md5, $txt));
+        if(!$rs) {
+            return false;
+        }
+
+        return true;
     }
 }

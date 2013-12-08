@@ -138,4 +138,9 @@ class UserManager extends Manager {
 
         return $this->arrayResult(1, '用户名必须是字母打头，只能有数字，字母和下划线组成');
     }
+
+    public function sync_user_info($data) {
+        $studyNo = $data['studyNo'];
+
+    }
 }
