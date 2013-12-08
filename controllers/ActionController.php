@@ -74,7 +74,7 @@ class ActionController extends Controller {
                 $rs = $this->tips->arrrayResult(1, 'operation type:' . $op_type . ' not support');
                 break;
         }
-
+        $this->logger->info('operation response:', $rs);
         echo json_encode($rs);
     }
 }
