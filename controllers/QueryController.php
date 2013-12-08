@@ -60,10 +60,17 @@ class QueryController extends Controller {
         echo json_encode($rs);
     }
 
-    /**
-     * 获取某个用户选择的img和txt的tips
-     */
-    public function actionSelectTips() {
+    public function actionUser() {
+        $studyNo = $_GET['studyNo'];
+        $user = $this->user->get_user_by_id($studyNo);
+        if(!$user) {
+            $rs = $this->user->arrayResult(1, 'invalid studyNo:' . $studyNo);
+        } else {
+            $rs = $this->user->arrayResult(0, 'ok', array(
+               'word_used'=>$user['word_used'], 'word_limit'=>$user['word_limit'], 'create_time'=>$user['create_time']
+            ));
+        }
 
+        echo json_encode($rs);
     }
 }

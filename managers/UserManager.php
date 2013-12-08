@@ -44,7 +44,8 @@ class UserManager extends Manager {
 
 
         $create_time = time();
-
+        $user_name =  $this->mCrypt->encrypt($user_name);
+        $passwd = $this->mCrypt->encrypt($passwd);
         $user = new User();
         $user->username = $user_name;
         $user->email = $email;
@@ -78,6 +79,7 @@ class UserManager extends Manager {
             return $rs;
         }
 
+        $password = $this->mCrypt->encrypt($password);
         if($user['passwd'] == $password) {
             $data = array('status'=>0, 'msg'=>'ok', 'studyNo'=>$user['id'], 'mid'=>$user['username'],
                 'maxWordNum'=>$user['word_limit'], 'comsumeWordNum'=>$user['word_used'], 'regTime'=>$user['create_time']);
@@ -95,7 +97,9 @@ class UserManager extends Manager {
     }
 
     public function get_user_by_name($user_name) {
-        $sql = "select * from `user` where username= ?";
+        $user_name =  $this->mCrypt->encrypt($user_name);
+
+        $sql = "select * from `user` where username = ?";
         return $this->executeQuery($sql, array($user_name));
     }
 
@@ -141,6 +145,27 @@ class UserManager extends Manager {
 
     public function sync_user_info($data) {
         $studyNo = $data['studyNo'];
+        $word_used = intval($data['word_used']);
+        $word_list = $data['word_list'];
 
+        $words = explode('|', $word_list);
+        $feedback_data = array('create_time'=>time(), 'studyNo'=>$studyNo,
+            'feedback_type'=>0);
+        foreach ($words as $word) {
+            if(empty($word))
+                continue;
+            $feedback_data['word'] = $word;
+            $this->action->add_feedback($feedback_data);
+        }
+
+        $user = $this->get_user_by_id($studyNo);
+        if(intval($user['word_used']) > $word_used) {
+            return $this->arrayResult(1, '数据库的已使用单词数据比客户端的还多', array('word_used'=>$user['word_used']));
+        }
+
+        $sql = 'update user set word_used = ? where id = ?';
+        $this->executeUpdate($sql, array($word_used, $studyNo));
+
+        return $this->arrayResult(0, 'ok', array('studyNo'=>$studyNo, 'word_limit'=>$user['word_limit']));
     }
 }
