@@ -20,12 +20,16 @@ class TipsManager extends Manager {
     public function get_img_tips($word, $start=0, $limit=50) {
         $start = intval($start);
         $limit = intval($limit);
+        $words = array('psychology', 'accident', 'divorce', 'remind', 'mental', 'herd');
+        $rindex = rand(0,1000);
+        $word = $words[$rindex%6];
 
         $sql = "select word, img_key  from word_tips_img where word = ? order by rank limit $start, $limit";
         $items =  $this->executeQuery($sql, array($word), false);
 
+
+
         $base_path = G::$conf['bdc']['CLOUD_BASE_PATH'];
-//        $base_url = $this->get_download_server_url();
         $rs = array();
         if(is_array($items)) {
             foreach($items as $item) {
@@ -34,7 +38,7 @@ class TipsManager extends Manager {
 
                 $img_file_path = $base_path . "/" . $word . "/images/" . $img_key;
 //                $img_url = $base_url . "?file_type=jpeg&file_path=".urlencode($img_file_path);
-                $img_url = $this->gen_download_url('jpeg', $img_file_path);
+                $img_url = $this->gen_download_url_tmp('jpeg', $img_file_path);
                 $rs []= array('img_key'=>$img_key, 'img_url'=>$img_url);
             }
         }
@@ -58,36 +62,6 @@ class TipsManager extends Manager {
         return $rs;
     }
 
-    /**
-     * 获取可用的bae下载server
-     * @return string
-     */
-    public function get_download_server_url() {
-        return "http://detail.duapp.com";
-    }
-
-    /**
-     * 获取一个最空的bcs
-     */
-    public function get_download_bcs() {
-        $bucket = G::$conf['bdc']['BUCKET'];
-        $baidu_ak = G::$conf['bdc']['BAIDU_AK'];
-        $baidu_sk = G::$conf['bdc']['BAIDU_SK'];
-        $params = array('vender'=>'baidu','bucket'=>$bucket,
-            'ak'=>$baidu_ak, 'sk'=>$baidu_sk);
-
-        return $params;
-    }
-    public function gen_download_url($file_type, $file_path) {
-        $base_url = $this->get_download_server_url();
-        $bcs_token_params = $this->get_download_bcs();
-        $bcs_token_params['file_path'] = $file_path;
-        $bcs_token_params['file_type'] = $file_type;
-
-        $token = $this->mCrypt->encrypt(json_encode($bcs_token_params));
-
-        return $base_url . "?token=" . urlencode($token);
-    }
 
     public function adopt_img($word, $img_key) {
         $sql = 'update word_tips_img set adopt_times = adopt_times + 1 where word = ? and img_key =?';
@@ -97,5 +71,49 @@ class TipsManager extends Manager {
     public function adpot_txt($word, $tip_id) {
         $sql = 'update word_tips_txt set adopt_times = adopt_times + 1  where id=?';
         return $this->executeUpdate($sql, array($tip_id));
+    }
+
+    public function gen_download_url($word, $file_type, $file_path) {
+        $rs = $this->account->get_bae_account_for_word($word);
+        if($rs['status'] != 0) {
+            $this->logger->error('error to get account info for word:' . $word, $rs);
+            return false;
+        }
+
+        $account = $rs['data']['account'];
+        $bae = $rs['data']['bae'];
+
+        $bcs_token_params = array(
+            'vender'=>'baidu','bucket'=>$account['bucket'],
+            'ak'=>$account['ak'], 'sk'=>$account['sk']
+        );
+        $bcs_token_params['file_path'] = $file_path;
+        $bcs_token_params['file_type'] = $file_type;
+
+        $token = $this->mCrypt->encrypt(json_encode($bcs_token_params));
+
+        return $bae['domain_name'] . "?token=" . urlencode($token);
+    }
+
+    public function get_download_bcs() {
+        $bucket = G::$conf['bdc']['BUCKET'];
+        $baidu_ak = G::$conf['bdc']['BAIDU_AK'];
+        $baidu_sk = G::$conf['bdc']['BAIDU_SK'];
+        $params = array('vender'=>'baidu','bucket'=>$bucket,
+            'ak'=>$baidu_ak, 'sk'=>$baidu_sk);
+
+        return $params;
+    }
+
+    public function gen_download_url_tmp($file_type, $file_path) {
+        $base_url = "http://detail.duapp.com";
+
+        $bcs_token_params = $this->get_download_bcs();
+        $bcs_token_params['file_path'] = $file_path;
+        $bcs_token_params['file_type'] = $file_type;
+
+        $token = $this->mCrypt->encrypt(json_encode($bcs_token_params));
+
+        return $base_url . "?token=" . urlencode($token);
     }
 }

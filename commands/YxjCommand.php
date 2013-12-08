@@ -11,8 +11,13 @@ class YxjCommand extends Command {
     {
         error_reporting(E_ALL & ~E_NOTICE);
         ini_set('display_errors', true);
+        $word = 'accent';
+        $rs = $this->sentence->get_sentence($word, 0, 10);
+        var_dump($rs);
 
-
+        $rs = $this->tips->get_img_tips($word, 0, 10);
+        var_dump($rs);
+        exit;
         foreach(array(1, 2, 3) as $item) {
             $rs = $this->account->get_bae_account_for_word('remind');
             print_r($rs);
