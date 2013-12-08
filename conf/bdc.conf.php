@@ -16,7 +16,7 @@ if(YII_DEBUG) {
         'BAIDU_SK' => 'wzK2rcHuBHOFvsldoqN8u3aqXjhM2FBd',
         'BUCKET' => 'baiduwords',
         'CLOUD_BASE_PATH' => '/words',
-        'PARTITIONS' => 20
+        'PARTITIONS' => 10
     );
 }
 
@@ -27,5 +27,5 @@ return array(
     'BAIDU_SK' => 'wzK2rcHuBHOFvsldoqN8u3aqXjhM2FBd',
     'BUCKET' => 'baiduwords',
     'CLOUD_BASE_PATH' => '/words',
-    'PARTITIONS' => 20
+    'PARTITIONS' => 10
 );
