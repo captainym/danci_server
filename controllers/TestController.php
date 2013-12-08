@@ -9,6 +9,10 @@
 class TestController extends Controller {
     public function actionWords() {
         $rs = $this->word->get_all_word();
+        foreach ($rs as &$w) {
+            $w['stem'] = ltrim($w['stem'], ' 词根');
+        }
+
         echo json_encode($rs);
     }
 }
