@@ -49,7 +49,7 @@ class TipsManager extends Manager {
                 $img_key = $item['img_key'];
 
                 $img_file_path = $base_path . "/" . $word . "/images/" . $img_key;
-                $img_url = $this->gen_download_url($word, 'jpeg', $img_file_path, $word_id, $account, $bae);
+                $img_url = $this->gen_download_url('jpeg', $img_file_path, $account, $bae);
                 $rs []= array('img_key'=>$img_key, 'img_url'=>$img_url);
             }
         }
@@ -86,11 +86,7 @@ class TipsManager extends Manager {
         return $this->executeUpdate($sql, array($tip_id));
     }
 
-    public function gen_download_url($word, $file_type, $file_path, $word_id, $account, $bae) {
-
-
-
-
+    public function gen_download_url($file_type, $file_path, $account, $bae) {
         $bcs_token_params = array(
             'vender'=>'baidu','bucket'=>$account['bucket'],
             'ak'=>$account['ak'], 'sk'=>$account['sk']
