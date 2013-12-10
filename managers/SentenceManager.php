@@ -18,6 +18,13 @@ class SentenceManager extends Manager {
 
         $base_path = G::$conf['bdc']['CLOUD_BASE_PATH'];
 
+        $word_info = $this->word->get_pure_word_info($word);
+        if(!$word_info) {
+            return $this->arrayResult(1, 'word:'. $word . '不存在');
+        }
+
+        $word_id = $word_info['id'];
+
         if(is_array($items)) {
             foreach ($items as $item) {
                 $voice_key = $item['voice_key'];
@@ -25,12 +32,13 @@ class SentenceManager extends Manager {
                 $mp3_file_path = $base_path . "/" . $word . "/sentence/" . $voice_key;
 //                $mp3_url = $base_url . "?file_type=mp3&file_path=".urlencode($mp3_file_path);
                 unset($item['voice_key']);
-                $item['voice'] = $this->gen_download_url($word, 'mp3', $mp3_file_path);
+                $item['voice'] = $this->gen_download_url($word, 'mp3', $mp3_file_path, $word_id);
                 $rs []= $item;
             }
         }
         $rs = $this->arrayResult(0, 'ok', $rs);
         $rs['word'] = $word;
+
         return $rs;
     }
 
@@ -52,8 +60,8 @@ class SentenceManager extends Manager {
         return $rs;
     }
 
-    public function gen_download_url($word, $file_type, $file_path) {
-        $rs = $this->account->get_bae_account_for_word($word);
+    public function gen_download_url($word, $file_type, $file_path, $word_id) {
+        $rs = $this->account->get_bae_account_for_word($word_id);
         if($rs['status'] != 0) {
             $this->logger->error('error to get account info for word:' . $word, $rs);
             return false;
