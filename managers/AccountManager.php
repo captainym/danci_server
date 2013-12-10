@@ -11,31 +11,18 @@ class AccountManager extends Manager {
         $partitions = G::$conf['bdc']['PARTITIONS'];
     }
 
-    public function get_partition_by_word($word) {
-        $partitions = G::$conf['bdc']['PARTITIONS'];
-        $word_info = $this->word->get_pure_word_info($word);
-        if(!$word_info) {
-            return false;
-        }
-
-        return intval($word_info['id'])  % $partitions;
-    }
-
     public function get_account_by_partition_id($partition_id) {
         $sql = "select id, username, email, password, ak, sk, bucket from baidu_account where partition_id = ?";
 
         return $this->executeQuery($sql, array($partition_id), false);
     }
 
-    public function get_bae_account_for_word($word) {
+    public function get_bae_account_for_word($word_id) {
         //static的变量最好是随即的，否则可能多个进程同时请求同一个备份
         static $index = 0;
 
-        $partition_id = $this->get_partition_by_word($word);
-        if($partition_id == false) {
-            $this->logger->error('word:' . $word . '不存在');
-            return $this->arrayResult(1, 'word:' . $word . '不存在');
-        }
+        $partitions = G::$conf['bdc']['PARTITIONS'];
+        $partition_id = intval($word_id)  % $partitions;
 
         $accounts = $this->get_account_by_partition_id($partition_id);
         if(empty($accounts)) {
@@ -48,7 +35,7 @@ class AccountManager extends Manager {
 
         $baes = $this->get_all_bae_by_account($account['id']);
         if(empty($baes)) {
-            $this->logger->error('no bae found for account:' . $account['id'], $word);
+            $this->logger->error('no bae found for account:' . $account['id'], $word_id);
             return $this->arrayResult(1, 'no bae found for account:' . $account['id']);
         }
 

@@ -18,16 +18,20 @@ class TipsManager extends Manager {
     }
 
     public function get_img_tips($word, $start=0, $limit=50) {
+        $img_partitions = G::$conf['bdc']['IMAGE_TIP_PARTITION'];
         $start = intval($start);
         $limit = intval($limit);
-        $words = array('psychology', 'accident', 'divorce', 'remind', 'mental', 'herd');
-        $rindex = rand(0,1000);
-        $word = $words[$rindex%6];
 
-        $sql = "select word, img_key  from word_tips_img where word = ? order by rank limit $start, $limit";
+        $word_info = $this->word->get_pure_word_info($word);
+        if(!$word_info) {
+            return false;
+        }
+        $word_id = $word_info['id'];
+
+        $img_partition_id = intval($word_id) % $img_partitions;
+
+        $sql = "select word, img_key  from word_tips_img_{$img_partition_id} where word = ? order by rank desc limit $start, $limit";
         $items =  $this->executeQuery($sql, array($word), false);
-
-
 
         $base_path = G::$conf['bdc']['CLOUD_BASE_PATH'];
         $rs = array();
@@ -37,8 +41,7 @@ class TipsManager extends Manager {
                 $img_key = $item['img_key'];
 
                 $img_file_path = $base_path . "/" . $word . "/images/" . $img_key;
-//                $img_url = $base_url . "?file_type=jpeg&file_path=".urlencode($img_file_path);
-                $img_url = $this->gen_download_url_tmp('jpeg', $img_file_path);
+                $img_url = $this->gen_download_url($word, 'jpeg', $img_file_path, $word_id);
                 $rs []= array('img_key'=>$img_key, 'img_url'=>$img_url);
             }
         }
@@ -51,7 +54,7 @@ class TipsManager extends Manager {
     public function get_txt_tips($word, $start=0, $limit=50) {
         $start = intval($start);
         $limit = intval($limit);
-        $sql = "select id, tip from word_tips_txt where word = ? order by rank limit $start, $limit";
+        $sql = "select id, tip from word_tips_txt where word = ? order by rank desc limit $start, $limit";
         $rs = $this->executeQuery($sql, array($word), false);
         if(!$rs) {
             $rs = array();
@@ -75,8 +78,8 @@ class TipsManager extends Manager {
         return $this->executeUpdate($sql, array($tip_id));
     }
 
-    public function gen_download_url($word, $file_type, $file_path) {
-        $rs = $this->account->get_bae_account_for_word($word);
+    public function gen_download_url($word, $file_type, $file_path, $word_id) {
+        $rs = $this->account->get_bae_account_for_word($word_id);
         if($rs['status'] != 0) {
             $this->logger->error('error to get account info for word:' . $word, $rs);
             return false;

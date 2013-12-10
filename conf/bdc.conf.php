@@ -17,7 +17,8 @@ if(YII_DEBUG) {
         'BUCKET' => 'baiduwords',
         'CLOUD_BASE_PATH' => '/words',
         'PARTITIONS' => 10,
-        'ADOPT_RANK_INC' => 5
+        'ADOPT_RANK_INC' => 5,
+        'IMAGE_TIP_PARTITION' => 10
     );
 }
 
@@ -29,5 +30,6 @@ return array(
     'BUCKET' => 'baiduwords',
     'CLOUD_BASE_PATH' => '/words',
     'PARTITIONS' => 10,
-    'ADOPT_RANK_INC' => 5
+    'ADOPT_RANK_INC' => 5,
+    'IMAGE_TIP_PARTITION' => 10
 );
