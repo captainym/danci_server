@@ -15,9 +15,6 @@ class QueryController extends Controller {
         $user_id = $_GET['user_id'];
         $rs = $this->word->get_word_info($user_id, $word);
 
-        header("Content-Type:text/html;charset=UTF-8");
-        header("Content-Type", "text/json");
-
         echo json_encode($rs);
     }
 
@@ -30,10 +27,6 @@ class QueryController extends Controller {
         $count = isset($_GET['count']) ? $_GET['count'] : 0;
 
         $rs = $this->sentence->get_sentence($word, $start, $count);
-
-        header("Content-Type:text/html;charset=UTF-8");
-        header("Content-Type", "text/json");
-
         echo json_encode($rs);
     }
 
@@ -51,10 +44,6 @@ class QueryController extends Controller {
         } else {
             $rs = $this->tips->get_txt_tips($word, $start, $count);
         }
-
-
-        header("Content-Type:text/html;charset=UTF-8");
-        header("Content-Type", "text/json");
 
         echo json_encode($rs);
     }
