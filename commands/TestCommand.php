@@ -12,7 +12,7 @@ class TestCommand extends Command {
         error_reporting(E_ALL & ~E_NOTICE);
         ini_set('display_errors', true);
 
-        $rs = $this->word->get_word_info(0, 'herd');
+        $rs = $this->user->update_user_word(1000, 'test|test2');
         var_dump($rs);
     }
 }
