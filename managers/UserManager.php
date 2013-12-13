@@ -176,8 +176,8 @@ class UserManager extends Manager {
         $sql = 'update user set word_used = ? where id = ?';
         $this->executeUpdate($sql, array($word_used, $studyNo));
 
-        $this->update_user_word($studyNo, $word_list);
-        return $this->arrayResult(0, 'ok', array('studyNo'=>$studyNo,
+        $word_rs = $this->update_user_word($studyNo, $word_list);
+        return $this->arrayResult(0, 'ok', array('studyNo'=>$studyNo, 'word_list'=>$word_rs['word_list'],
             'maxWordNum'=>$user['word_limit'], 'comsumeWordNum'=>$user['word_used'], 'status'=>0, 'msg'=>'ok'));
     }
 
@@ -189,10 +189,14 @@ class UserManager extends Manager {
     public function update_user_word($user_id, $word_list) {
         $exists = $this->get_user_word_by_id($user_id);
         if($exists) {
-            $sql = 'update user_words set word_list = ? where user_id = ?';
-            $this->executeUpdate($sql, array($word_list, $user_id));
+            if(strlen($exists['word_list']) < strlen($word_list)) {
+                $sql = 'update user_words set word_list = ? where user_id = ?';
+                $this->executeUpdate($sql, array($word_list, $user_id));
+            } else {
+                $word_list = $exists['word_list'];
+            }
 
-            return;
+            return array('user_id'=>$user_id, 'word_list'=>$word_list);
         }
 
         $user_word = new UserWords();
@@ -204,5 +208,7 @@ class UserManager extends Manager {
         } catch (Exception $e) {
             $this->logger->info('error to save user word'. $e->getMessage());
         }
+
+        return array('user_id'=>$user_id, 'word_list'=>$word_list);
     }
 }
