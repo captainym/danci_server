@@ -6,8 +6,8 @@
  * Time: 下午2:25
  * To change this template use File | Settings | File Templates.
  */ 
-class IndexController {
+class IndexController extends Controller {
     public function actionIndex() {
-
+        $this->tpl->display('index/index.html');
     }
 }
