@@ -78,6 +78,7 @@ class TipsManager extends Manager {
         $default_inc = intval(G::$conf['bdc']['ADOPT_RANK_INC']);
 
         $sql = 'update word_tips_img set adopt_times = adopt_times + 1, rank = rank + ' . $default_inc . ' where word = ? and img_key =?';
+	echo $sql;
         return $this->executeUpdate($sql, array($word, $img_key));
     }
 

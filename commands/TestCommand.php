@@ -12,7 +12,7 @@ class TestCommand extends Command {
         error_reporting(E_ALL & ~E_NOTICE);
         ini_set('display_errors', true);
 
-        $rs = $this->user->update_user_word(1000, 'test|test2');
+        $rs = $this->tips->adopt_img('overfish','a4756dc9f41767ed60d0a75e084073f3');
         var_dump($rs);
     }
 }
