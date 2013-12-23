@@ -12,16 +12,15 @@ class YxjCommand extends Command {
         error_reporting(E_ALL & ~E_NOTICE);
         ini_set('display_errors', true);
 
-        $data = array(
-            'word'=>'herd', 'studyNo'=>'9999', 'feedback_type'=>'11',
-            'create_time'=>strval(time()) . ".1239191"
-        );
+        $sql = 'select username, passwd from user';
+        $rs = $this->user->executeQuery($sql,array(), false);
+        foreach ($rs as $item) {
+            print_r($item);
+            $user_name = $this->mCrypt->decrypt($item['username']);
+            $passwd = $this->mCrypt->decrypt($item['passwd']);
 
-        $rs = '{"tuijian":"7777","mid":"shiym","imei":"imei","pwd":"123123"}';
-        $rs = json_decode($rs, true);
-        $this->user->add_user($rs);
-        exit;
-        $rs = $this->action->add_feedback($data);
-        var_dump($rs);
+            echo "$user_name:$passwd\n";
+        }
+
     }
 }

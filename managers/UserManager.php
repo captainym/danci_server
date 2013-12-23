@@ -26,6 +26,8 @@ class UserManager extends Manager {
 
             return $rs;
         }
+        $user_name = strtolower($user_name);
+
         $user = $this->get_user_by_name($user_name);
         if($user) {
             $rs = $this->arrayResult(1, '用户名' . $user_name . '已注册');
@@ -71,7 +73,7 @@ class UserManager extends Manager {
     }
 
     public function auth($data) {
-        $username = $data['mid'];
+        $username = strtolower($data['mid']);
         $password = $data['pwd'];
         $user = $this->get_user_by_name($username);
         if(!$user) {
