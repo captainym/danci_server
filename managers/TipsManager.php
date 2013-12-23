@@ -75,11 +75,22 @@ class TipsManager extends Manager {
 
 
     public function adopt_img($word, $img_key) {
+        $img_partitions = G::$conf['bdc']['IMAGE_TIP_PARTITION'];
+
         $default_inc = intval(G::$conf['bdc']['ADOPT_RANK_INC']);
+        $word_info = $this->word->get_pure_word_info($word);
+
+        if(!$word_info) {
+            $this->logger->error('error to find word:'. $word);
+            return $this->arrayResult(1, 'word:'. $word. '不在库中');
+        }
+        $img_partition_id = intval($word_info['id']) % $img_partitions;
+
+        $sql = 'update word_tips_img_' . $img_partition_id .'  set adopt_times = adopt_times + 1, rank = rank + ' . $default_inc . ' where word = ? and img_key =?';
+        $this->executeUpdate($sql, array($word, $img_key));
 
         $sql = 'update word_tips_img set adopt_times = adopt_times + 1, rank = rank + ' . $default_inc . ' where word = ? and img_key =?';
-	echo $sql;
-        return $this->executeUpdate($sql, array($word, $img_key));
+        return $this->arrayResult(0, 'ok');
     }
 
     public function adopt_txt($word, $tip_id) {

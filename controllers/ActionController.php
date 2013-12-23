@@ -84,4 +84,8 @@ class ActionController extends Controller {
         $this->logger->info('end sync user', $rs);
         echo json_encode($rs);
     }
+
+    public function actionAnnounce() {
+
+    }
 }
