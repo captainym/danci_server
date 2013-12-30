@@ -21,6 +21,7 @@ class YxjCommand extends Command {
 
             echo "$user_name:$passwd\n";
         }
+	var_dump($this->mCrypt->encrypt('abc123'));
 
     }
 }

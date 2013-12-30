@@ -11,6 +11,8 @@ class QueryController extends Controller {
      * 获取一个单词的所有的信息
      */
     public function actionWord() {
+        //disable session， 提高并发
+        session_write_close();
         $word = $_GET['name'];
         $user_id = $_GET['user_id'];
         $rs = $this->word->get_word_info($user_id, $word);
@@ -22,6 +24,8 @@ class QueryController extends Controller {
      * 获取一个单词的例句，分页获取，最多100条
      */
     public function actionSentence() {
+        //disable session， 提高并发
+        session_write_close();
         $word = $_GET['word'];
         $start = isset($_GET['start']) ? $_GET['start'] : 0;
         $count = isset($_GET['count']) ? $_GET['count'] : 0;
@@ -34,6 +38,8 @@ class QueryController extends Controller {
      * 获取助记信息，包括img和txt, 通过参数区分,默认文字助记
      */
     public function actionTips() {
+        //disable session， 提高并发
+        session_write_close();
         $word = trim($_GET['word']);
         $type = trim($_GET['type']);
         $start = isset($_GET['start']) ? $_GET['start'] : 0;
@@ -49,6 +55,8 @@ class QueryController extends Controller {
     }
 
     public function actionUser() {
+        //disable session， 提高并发
+        session_write_close();
         $studyNo = $_GET['studyNo'];
         $user = $this->user->get_user_by_id($studyNo);
         if(!$user) {
