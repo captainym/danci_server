@@ -18,7 +18,8 @@ if(YII_DEBUG) {
         'CLOUD_BASE_PATH' => '/words',
         'PARTITIONS' => 10,
         'ADOPT_RANK_INC' => 5,
-        'IMAGE_TIP_PARTITION' => 10
+        'IMAGE_TIP_PARTITION' => 10,
+        'APP_STORE_URL' => 'http://www.sina.com.cn'
     );
 }
 
@@ -31,6 +32,7 @@ return array(
     'CLOUD_BASE_PATH' => '/words',
     'PARTITIONS' => 10,
     'ADOPT_RANK_INC' => 5,
-    'IMAGE_TIP_PARTITION' => 10
+    'IMAGE_TIP_PARTITION' => 10,
+    'APP_STORE_URL' => 'http://www.sina.com.cn'
 );
 
