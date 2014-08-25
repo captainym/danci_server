@@ -19,7 +19,7 @@ if(YII_DEBUG) {
         'PARTITIONS' => 10,
         'ADOPT_RANK_INC' => 5,
         'IMAGE_TIP_PARTITION' => 10,
-        'APP_STORE_URL' => 'http://www.sina.com.cn'
+        'APP_STORE_URL' => 'https://itunes.apple.com/cn/app/xue-hao-dan-ci/id785571802?mt=8'
     );
 }
 
@@ -33,5 +33,5 @@ return array(
     'PARTITIONS' => 10,
     'ADOPT_RANK_INC' => 5,
     'IMAGE_TIP_PARTITION' => 10,
-    'APP_STORE_URL' => 'http://www.sina.com.cn'
+    'APP_STORE_URL' => 'https://itunes.apple.com/cn/app/xue-hao-dan-ci/id785571802?mt=8'
 );

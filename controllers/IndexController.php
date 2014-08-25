@@ -8,6 +8,6 @@
  */ 
 class IndexController extends Controller {
     public function actionIndex() {
-        $this->tpl->display('index/index.html');
+	var_dump($this->weChat);
     }
 }

@@ -1,5 +1,5 @@
 <?php
-class BdcModule extends Module{
+class WxModule extends Module{
 
     public function init()
     {
